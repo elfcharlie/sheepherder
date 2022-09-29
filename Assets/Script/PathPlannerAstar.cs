@@ -21,8 +21,8 @@ public class PathPlannerAstar: MonoBehaviour
 
     void Update()
     {
-        astar(oldMan.position, dog.position);
         oldManController.SetNode(grid.NodeFromWorldPoint(oldMan.position));
+        astar(oldMan.position, dog.position);
     }
     public void astar(Vector2 startPos, Vector2 goalPos)
     {

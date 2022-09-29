@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DogController : MonoBehaviour
 {
@@ -15,8 +16,9 @@ public class DogController : MonoBehaviour
     void Awake()
     {
         transform.position = GameObject.FindWithTag("StartPosition").transform.position; 
-        highScoreManager = GameObject.FindWithTag("HighScoreManager").GetComponent<HighScoreManager>();
-   
+        if(SceneManager.GetActiveScene().buildIndex != 0){
+            highScoreManager = GameObject.FindWithTag("HighScoreManager").GetComponent<HighScoreManager>();
+        }
     }
 
     // Update is called once per frame

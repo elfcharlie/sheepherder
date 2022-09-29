@@ -13,7 +13,7 @@ public class OldManController : MonoBehaviour
     private DogController dogController;
     private GamePlayManager gamePlayManager;
     private Transform playerTransform;
-    private float moveSpeed = 0.5f;
+    public float moveSpeed = 0.5f;
     private bool isMoving = false;
     private bool isTalking = false;
     private bool isLevelFinished = false;
@@ -22,6 +22,7 @@ public class OldManController : MonoBehaviour
     private string finishText = "Great job Milo!";
     private List<Node> path;
     private Node currentNode = null;
+    private Node targetNode = null;
     // Start is called before the first frame update
 
     void Awake()
@@ -42,43 +43,57 @@ public class OldManController : MonoBehaviour
         StopAllCoroutines();
         SayIntroText(introText);
         isMoving = false;
+        
     }
     void FixedUpdate()
     {
-        
+        if (path != null && targetNode == null)
+        {
+            targetNode = path[0];
+        }
+        if(targetNode != null && Mathf.Abs(transform.position.x - targetNode.worldPosition.x) < 0.02 && Mathf.Abs(transform.position.y - targetNode.worldPosition.y) < 0.02)
+        {
+            targetNode = path[0];
+
+        }
+
         if (!isTalking && !isLevelFinished && Physics2D.OverlapCircle(transform.position, 0.2f, playerLayerMask))
         {
             StartCoroutine(TypeSentence(runMiloText));
         }
-        if (currentNode.walkable && isMoving && !isTalking && !isLevelFinished && path != null)
+        if (currentNode.walkable && isMoving && !isTalking && !isLevelFinished && path != null && targetNode != null)
         {
-            transform.position = Vector3.MoveTowards(transform.position, path[0].worldPosition, moveSpeed * Time.fixedDeltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, targetNode.worldPosition, moveSpeed * Time.fixedDeltaTime);
         }
         else if (isMoving && !isLevelFinished && path == null){
             transform.position = Vector3.MoveTowards(transform.position, playerTransform.position, moveSpeed * Time.fixedDeltaTime);
         }
         else if(!currentNode.walkable)
         {
+
             float[] directions = new float[2];
-            directions[0] = Mathf.Abs(currentNode.worldPosition.x - path[0].worldPosition.x);
-            directions[1] = Mathf.Abs(currentNode.worldPosition.y - path[0].worldPosition.y);
-            float horizontalSign = Mathf.Sign(currentNode.worldPosition.x - path[0].worldPosition.x);
-            float verticalSign = Mathf.Sign(currentNode.worldPosition.y - path[0].worldPosition.y);
+            directions[0] = Mathf.Abs(currentNode.worldPosition.x - transform.position.x);
+            directions[1] = Mathf.Abs(currentNode.worldPosition.y - transform.position.y);
+            float horizontalSign = Mathf.Sign(currentNode.worldPosition.x - transform.position.x);
+            float verticalSign = Mathf.Sign(currentNode.worldPosition.y - transform.position.y);
             int maxIndex = directions.ToList().IndexOf(directions.Max());
+            
             if (directions[0] == directions[1])
             {
                 //transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, path[0].worldPosition.y, 0), -verticalSign * moveSpeed * Time.fixedDeltaTime);
-                transform.position = Vector3.MoveTowards(transform.position, new Vector3(path[0].worldPosition.x, transform.position.y, 0), -horizontalSign * moveSpeed * Time.fixedDeltaTime);
-
+                transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetNode.worldPosition.x, transform.position.y, 0), moveSpeed * Time.fixedDeltaTime);
+                Debug.Log("Equal");
             }
             else if (maxIndex == 0)
             {
-                transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, path[0].worldPosition.y, 0), -verticalSign * moveSpeed * Time.fixedDeltaTime);
-                Debug.Log("UP");
+                transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetNode.worldPosition.x, transform.position.y, 0), moveSpeed * Time.fixedDeltaTime);
+                Debug.Log("SIDE");
             }
             else if(maxIndex == 1)
             {
-                transform.position = Vector3.MoveTowards(transform.position, new Vector3(path[0].worldPosition.x, transform.position.y, 0), -horizontalSign * moveSpeed * Time.fixedDeltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, targetNode.worldPosition.y, 0), moveSpeed * Time.fixedDeltaTime);
+                Debug.Log("UP");
+
             }
         }
     }
@@ -86,8 +101,8 @@ public class OldManController : MonoBehaviour
     IEnumerator TypeSentence (string sentence)
     {
         WaitForSeconds wait01 = new WaitForSeconds(0.01f);
-        WaitForSeconds wait2 = new WaitForSeconds(2f);
-        WaitForSeconds wait4 = new WaitForSeconds(4f);
+        WaitForSeconds wait2 = new WaitForSeconds(0.1f);
+        WaitForSeconds wait4 = new WaitForSeconds(0.1f);
         if(sentence == introText){
             yield return wait2;
         }
@@ -133,9 +148,8 @@ public class OldManController : MonoBehaviour
     {
         // Run towards Player
         moveSpeed = 3f;
-        if (!isLevelFinished && Vector3.Distance(transform.position, playerTransform.position) > 2f){
-            transform.position = Vector3.MoveTowards(transform.position, playerTransform.position, moveSpeed * Time.fixedDeltaTime);
-        } else if (!isTalking && !isLevelFinished && Vector3.Distance(transform.position, playerTransform.position) <= 3f)
+        if (Vector3.Distance(transform.position, playerTransform.position) < 2f &&
+            !isTalking && !isLevelFinished && Vector3.Distance(transform.position, playerTransform.position) <= 3f)
         {
             StartCoroutine(TypeSentence(finishText));
             isLevelFinished = true;

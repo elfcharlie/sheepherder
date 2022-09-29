@@ -47,8 +47,8 @@ public class Grid : MonoBehaviour
         percentX = Mathf.Clamp01(percentX);
         percentY = Mathf.Clamp01(percentY);
 
-        int x  = Mathf.RoundToInt((gridSizeX - 1) * percentX);
-        int y  = Mathf.RoundToInt((gridSizeY - 1) * percentY);
+        int x  = Mathf.RoundToInt((gridSizeX) * percentX);
+        int y  = Mathf.RoundToInt((gridSizeY) * percentY);
         return grid[x,y];
     }
 
@@ -101,6 +101,10 @@ public class Grid : MonoBehaviour
                 if (dogNode == n)
                 {
                     Gizmos.color = Color.green;
+                }
+                if (path[0] == n)
+                {
+                    Gizmos.color = Color.magenta;
                 }
                 Gizmos.DrawCube(new Vector3(n.worldPosition.x, n.worldPosition.y, 0), Vector3.one * (nodeDiameter - 0.5f));
 

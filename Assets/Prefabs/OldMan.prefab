@@ -134,7 +134,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5616523, y: 0.8835119}
+  m_Size: {x: 0.72086287, y: 0.8517287}
   m_EdgeRadius: 0
 --- !u!95 &5030119438931535759
 Animator:
@@ -171,6 +171,7 @@ MonoBehaviour:
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 512
+  moveSpeed: 0.5
 --- !u!1 &5701748905482337436
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,7 +17,10 @@ public class MenuManager : MonoBehaviour
 
     void Start()
     {
-        highScoreManager = GameObject.FindWithTag("HighScoreManager").GetComponent<HighScoreManager>();
+        if(SceneManager.GetActiveScene().buildIndex != 0)
+        {
+            highScoreManager = GameObject.FindWithTag("HighScoreManager").GetComponent<HighScoreManager>();
+        }
         inGameMenuUI.SetActive(true);
         pauseMenuUI.SetActive(false);
         finishMenuUI.SetActive(false);
@@ -27,7 +30,10 @@ public class MenuManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        timerTextUI.SetText(highScoreManager.GetHighScoreInt().ToString());
+        if(SceneManager.GetActiveScene().buildIndex != 0)
+        {
+            timerTextUI.SetText(highScoreManager.GetHighScoreInt().ToString());
+        }
     }
 
     public void PauseGame()

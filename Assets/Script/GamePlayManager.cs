@@ -7,6 +7,7 @@ public class GamePlayManager : MonoBehaviour
     private GameObject[] sheep;
     private int sheepAmount;
     private bool isLevelFinished = false;
+    private bool showFinishMenu = false;
     private GoalManager goalManagerScript;
     private MenuManager menuManagerScript;
     private DogController dogController;
@@ -32,7 +33,10 @@ public class GamePlayManager : MonoBehaviour
     {
         if (sheepAmount == goalManagerScript.GetSheepInGoal())
         {
-            
+            SetLevelFinished();
+        }
+        if (isLevelFinished)
+        {
             Finish();
         }
     }
@@ -40,7 +44,7 @@ public class GamePlayManager : MonoBehaviour
     {
         dogController.StopMovement();
         oldManController.Finish();
-        if (isLevelFinished){
+        if (showFinishMenu){
             int score = highScoreManager.GetHighScore();
             menuManagerScript.FinishGame(score);
         }
@@ -48,5 +52,9 @@ public class GamePlayManager : MonoBehaviour
     public void SetLevelFinished()
     {
         isLevelFinished = true;
+    }
+    public void ShowFinishMenu()
+    {
+        showFinishMenu = true;
     }
 }

@@ -8,15 +8,12 @@ public class PathPlannerAstar: MonoBehaviour
     Grid grid;
     public Transform oldMan;
     public Transform dog;
-    public Transform dogStartPos;
-    public Transform oldManStartPos;
     private OldManController oldManController;
-    void Awake()
+    void Start()
     {
         grid = GetComponent<Grid>();
         oldManController = GameObject.FindWithTag("OldMan").GetComponent<OldManController>();
         oldManController.SetNode(grid.NodeFromWorldPoint(oldMan.position));
-
     }
 
     void Update()
@@ -28,10 +25,6 @@ public class PathPlannerAstar: MonoBehaviour
     {
         Node startNode = grid.NodeFromWorldPoint(startPos);
         Node goalNode = grid.NodeFromWorldPoint(goalPos);
-        if (!goalNode.walkable)
-        {
-            goalNode = grid.NodeFromWorldPoint(dogStartPos.position);
-        }
         
         List<Node> openSet = new List<Node>();
         HashSet<Node> closedSet = new HashSet<Node>();

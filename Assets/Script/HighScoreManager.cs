@@ -64,12 +64,10 @@ public class HighScoreManager : MonoBehaviour
         return currentScore;
     }
     public void SetScore(int score){
-        Debug.Log(GetCurrentHighScore());
         
         if(GetCurrentHighScore() < score)
         {
             PlayerPrefs.SetInt(currentLevel, score);
         }
-        Debug.Log(GetCurrentHighScore());
     }
 }

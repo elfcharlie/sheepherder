@@ -25,10 +25,7 @@ public class OldManController : MonoBehaviour
     private Node targetNode = null;
     // Start is called before the first frame update
 
-    void Awake()
-    {
-        transform.position = GameObject.FindWithTag("OldManStartPosition").transform.position; 
-    }
+
     void Start()
     {
         isLevelFinished = false;
@@ -119,7 +116,7 @@ public class OldManController : MonoBehaviour
         {
             dogController.StartMovement();
         } else if (sentence == finishText){
-            gamePlayManager.SetLevelFinished();
+            gamePlayManager.ShowFinishMenu();
         }
     }
     

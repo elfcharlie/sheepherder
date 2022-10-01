@@ -15,7 +15,6 @@ public class DogController : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        transform.position = GameObject.FindWithTag("StartPosition").transform.position; 
         if(SceneManager.GetActiveScene().buildIndex != 0){
             highScoreManager = GameObject.FindWithTag("HighScoreManager").GetComponent<HighScoreManager>();
         }

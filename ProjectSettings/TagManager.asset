@@ -14,6 +14,7 @@ TagManager:
   - Level
   - HighScoreManager
   - OldManStartPosition
+  - JoyStick
   layers:
   - Default
   - TransparentFX

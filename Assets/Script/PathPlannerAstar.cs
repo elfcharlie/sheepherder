@@ -6,12 +6,15 @@ public class PathPlannerAstar: MonoBehaviour
 {
 
     Grid grid;
-    public Transform oldMan;
-    public Transform dog;
+    private Transform oldMan;
+    private Transform dog;
     private OldManController oldManController;
     void Start()
     {
+
         grid = GetComponent<Grid>();
+        oldMan = GameObject.FindWithTag("OldMan").GetComponent<Transform>();
+        dog = GameObject.FindWithTag("Player").GetComponent<Transform>();
         oldManController = GameObject.FindWithTag("OldMan").GetComponent<OldManController>();
         oldManController.SetNode(grid.NodeFromWorldPoint(oldMan.position));
     }

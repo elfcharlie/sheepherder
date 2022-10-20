@@ -6,11 +6,13 @@ public class SheepController : MonoBehaviour
 {
     private float moveSpeed = 2f;
     public Rigidbody2D rb;
-
+    public LayerMask stopMovementLayerMask;
     private Transform playerTransform;
     private float distanceToPlayer;
     private Vector2 directionToPlayer;
     private Vector2 playerDirection;
+    private Vector2 transposedPlayerDirection;
+    private Vector2 perpendicularToPlayerDirection;
     private Vector2 moveDirection;
     private Vector2 roamDirection;
     private Vector2 otherSheepDirection;
@@ -32,7 +34,7 @@ public class SheepController : MonoBehaviour
         distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
         directionToPlayer = (transform.position - playerTransform.position).normalized;
         playerDirection = playerTransform.gameObject.GetComponent<DogController>().GetMovement().normalized;
-        moveDirection = (directionToPlayer + playerDirection);
+        moveDirection = (/*directionToPlayer + */playerDirection);
         foreach(GameObject sheep in otherSheep){
             if (sheep.GetInstanceID() != gameObject.GetInstanceID() && moveTowardsSheep.Count <= 2 
                 && Vector2.Distance(transform.position, sheep.transform.position) < 10f
@@ -46,6 +48,7 @@ public class SheepController : MonoBehaviour
     {
         if (distanceToPlayer < 4f) // Get herded
         {
+            MoveToghether();
             rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
         } 
         else 
@@ -64,6 +67,17 @@ public class SheepController : MonoBehaviour
         }
     }
 
+    private void MoveToghether()
+    {
+        perpendicularToPlayerDirection = Vector2.Perpendicular(playerDirection);
+        if (Vector2.SignedAngle(playerDirection, directionToPlayer) > 0)
+        {
+            perpendicularToPlayerDirection *= -1;
+        }
+        moveDirection += 0.2f * perpendicularToPlayerDirection;
+        transposedPlayerDirection = new Vector2(playerDirection.y, playerDirection.x);
+    }
+
     private void SetNewRoamDirection()
     {
         moveTowardsSheep.Clear();
@@ -76,6 +90,11 @@ public class SheepController : MonoBehaviour
             moveDirection += otherSheepDirection;
             roamDirection = roamDirection - otherSheepDirection;
         }*/
+    }
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, 3 * ( new Vector3(moveDirection.x, moveDirection.y, 0f)));
     }
 
     private void StayTogether(float speedCoeff)

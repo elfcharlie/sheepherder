@@ -8,9 +8,11 @@ public class DogController : MonoBehaviour
     public float moveSpeed = 5f;
     public Rigidbody2D rb;
     public Joystick joyStick;
+    public Animator anim;
     private Vector2 movement;
     private HighScoreManager highScoreManager;
-    
+    private float idleTimer = 0;
+
 
     // Start is called before the first frame update
     void Awake()
@@ -29,6 +31,25 @@ public class DogController : MonoBehaviour
         */
         movement.x = joyStick.Horizontal;
         movement.y = joyStick.Vertical;
+        if(movement.x != 0)
+        {
+            anim.SetBool("isIdle", false);
+            anim.SetBool("isLying", false);
+            anim.SetFloat("X", movement.x);
+            anim.SetBool("isRunning", true);
+            idleTimer = 4f;
+        }
+        else if (idleTimer > 0)
+        {
+            idleTimer -= Time.deltaTime;
+            anim.SetBool("isRunning", false);
+            anim.SetBool("isIdle", true);
+        }
+        else if (idleTimer <= 0)
+        {
+            anim.SetBool("isIdle", false);
+            anim.SetBool("isLying", true);
+        }
         
     }
     void FixedUpdate()
@@ -49,5 +70,9 @@ public class DogController : MonoBehaviour
     public Vector2 GetMovement()
     {
         return movement;
+    }
+    void OnTriggerStay2D (Collider2D collider)
+    {
+        Debug.Log("INSIDE!!!!!!!");
     }
 }

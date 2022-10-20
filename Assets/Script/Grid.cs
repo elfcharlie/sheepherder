@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Grid : MonoBehaviour
 {
-    public Transform oldMan;
-    public Transform dog;
+    private Transform oldMan;
+    private Transform dog;
     public LayerMask unwalkableMask;
     public Vector2 gridWorldSize;
     public float nodeRadius;
@@ -22,6 +22,11 @@ public class Grid : MonoBehaviour
         gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
         gridSizeY = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
         CreateGrid();
+    }
+    void Start()
+    {
+        oldMan = GameObject.FindWithTag("OldMan").GetComponent<Transform>();
+        dog = GameObject.FindWithTag("Player").GetComponent<Transform>();
     }
     void CreateGrid()
     {
@@ -77,7 +82,7 @@ public class Grid : MonoBehaviour
         return neighbours;
     }
 
-    void OnDrawGizmos()
+    /*void OnDrawGizmos()
     {
         if (grid != null)
         {
@@ -111,5 +116,5 @@ public class Grid : MonoBehaviour
             }
         }
         Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, gridWorldSize.y, 1));
-    }
+    }*/
 }

@@ -7,13 +7,14 @@ using TMPro;
 public class OldManController : MonoBehaviour
 {
     public LayerMask playerLayerMask;
+    public float moveSpeed = 0.5f;
+    public Animator anim;
     private GameObject oldManSpeechBubble;
     private GameObject oldManTextObject;
     private TextMeshProUGUI oldManText;
     private DogController dogController;
     private GamePlayManager gamePlayManager;
     private Transform playerTransform;
-    public float moveSpeed = 0.5f;
     private bool isMoving = false;
     private bool isTalking = false;
     private bool isLevelFinished = false;
@@ -40,7 +41,8 @@ public class OldManController : MonoBehaviour
         StopAllCoroutines();
         SayIntroText(introText);
         isMoving = false;
-        
+
+        anim.SetFloat("moveSpeed", moveSpeed);
     }
     void FixedUpdate()
     {
@@ -54,7 +56,7 @@ public class OldManController : MonoBehaviour
 
         }
 
-        if (!isTalking && !isLevelFinished && Physics2D.OverlapCircle(transform.position, 0.2f, playerLayerMask))
+        if (!isTalking && !isLevelFinished && Physics2D.OverlapCircle(transform.position, 1.5f, playerLayerMask))
         {
             StartCoroutine(TypeSentence(runMiloText));
         }
@@ -92,14 +94,17 @@ public class OldManController : MonoBehaviour
                 Debug.Log("UP");
 
             }
+
+            // Animations
+            anim.SetFloat("X", Mathf.Sign(targetNode.worldPosition.x - transform.position.x));
         }
     }
 
     IEnumerator TypeSentence (string sentence)
     {
         WaitForSeconds wait01 = new WaitForSeconds(0.01f);
-        WaitForSeconds wait2 = new WaitForSeconds(0.1f);
-        WaitForSeconds wait4 = new WaitForSeconds(0.1f);
+        WaitForSeconds wait2 = new WaitForSeconds(2f);
+        WaitForSeconds wait4 = new WaitForSeconds(4f);
         if(sentence == introText){
             yield return wait2;
         }
@@ -125,6 +130,7 @@ public class OldManController : MonoBehaviour
         oldManSpeechBubble.SetActive(true);
         isMoving = false;
         isTalking = true;
+        anim.SetBool("isMoving", false);
     }
 
     private void HideSpeechBubble()
@@ -132,6 +138,7 @@ public class OldManController : MonoBehaviour
         oldManSpeechBubble.SetActive(false);
         isMoving = true;
         isTalking = false;
+        anim.SetBool("isMoving", true);
     }
 
     private void SayIntroText(string introText)
@@ -145,11 +152,11 @@ public class OldManController : MonoBehaviour
     {
         // Run towards Player
         moveSpeed = 3f;
-        if (Vector3.Distance(transform.position, playerTransform.position) < 2f &&
-            !isTalking && !isLevelFinished && Vector3.Distance(transform.position, playerTransform.position) <= 3f)
+        anim.SetFloat("moveSpeed", moveSpeed);
+        if (!isTalking && !isLevelFinished && Vector3.Distance(transform.position, playerTransform.position) <= 3f)
         {
-            StartCoroutine(TypeSentence(finishText));
             isLevelFinished = true;
+            StartCoroutine(TypeSentence(finishText));
         }
     }
 

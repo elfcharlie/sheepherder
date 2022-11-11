@@ -34,7 +34,7 @@ public class SheepController : MonoBehaviour
         distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
         directionToPlayer = (transform.position - playerTransform.position).normalized;
         playerDirection = playerTransform.gameObject.GetComponent<DogController>().GetMovement().normalized;
-        moveDirection = (/*directionToPlayer + */playerDirection);
+        moveDirection = (directionToPlayer + playerDirection);
         foreach(GameObject sheep in otherSheep){
             if (sheep.GetInstanceID() != gameObject.GetInstanceID() && moveTowardsSheep.Count <= 2 
                 && Vector2.Distance(transform.position, sheep.transform.position) < 10f
@@ -48,7 +48,7 @@ public class SheepController : MonoBehaviour
     {
         if (distanceToPlayer < 4f) // Get herded
         {
-            MoveToghether();
+            //MoveToghether();
             rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
         } 
         else 
